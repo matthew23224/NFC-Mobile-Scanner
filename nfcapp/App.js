@@ -8,14 +8,14 @@ export default function App() {
   const [ scanMode, setScanMode] = useState(false);
 
   function makePost() {
-    fetch('https://hcs-nfc-prototype.herokuapp.com/nfc', {
+    fetch('https://hfc-nfc-flask.herokuapp.com/nfc', {
     method: 'POST',
     headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      url: 'https://hcs-nfc-prototype.herokuapp.com/in'
+      text: 'hello'
     })
   }).then((response) => console.log(response))
   }
@@ -135,5 +135,3 @@ const styles = StyleSheet.create({
     
   }
 });
-
-
