@@ -73,9 +73,11 @@ export default function App() {
           <View style={{paddingTop: 20}}>
           <Text style={{fontSize: 20, textAlign: 'center', fontWeight: 'bold'}}>Scanning</Text>
           <BarIndicator size={50} count={5} color={'#3888EA'}></BarIndicator>
+          <View style={{paddingBottom: 30}}>
           <Text style={{fontSize: 14, textAlign: 'center'}}>Hold your phone near the NFC tag</Text>
           <Text style={{fontSize: 14, textAlign: 'center'}}>to unlock ur phone</Text>
-          <View style={{paddingBot: 20}}>
+          </View>
+          <View style={{paddingBottom: 20}}>
           <Button
           title="Cancel"
           color="#3888EA"
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderRadius: 100,
-    backgroundColor: 'darkgrey',
+    backgroundColor: '#3888EA',
   },
   scanBox: {
     flex: 5, 
