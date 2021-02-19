@@ -2,10 +2,40 @@ import React, { useState, useEffect } from 'react';
 
 import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Button, TouchableOpacity, Image } from 'react-native';
 
+import NfcManager, {NfcEvents} from 'react-native-nfc-manager';
+
 export default function App() {
 
   const [ scanned, setScanned ] = useState(false);
   const [ scanMode, setScanMode] = useState(false);
+
+  function readNdef() {
+    const cleanUp = () => {
+      NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
+      NfcManager.setEventListener(NfcEvents.SessionClosed, null);
+    };
+  
+    return new Promise((resolve) => {
+      let tagFound = null;
+  
+      NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {
+        tagFound = tag;
+        resolve(tagFound);
+        setScanMode(false)
+        NfcManager.setAlertMessageIOS('NDEF tag found');
+        NfcManager.unregisterTagEvent().catch(() => 0);
+      });
+  
+      NfcManager.setEventListener(NfcEvents.SessionClosed, () => {
+        cleanUp();
+        if (!tagFound) {
+          resolve();
+        }
+      });
+  
+      NfcManager.registerTagEvent();
+    });
+  }
 
   function makePost() {
     fetch('https://hfc-nfc-flask.herokuapp.com/nfc', {
@@ -66,6 +96,11 @@ export default function App() {
     )
   }
 
+  function changeScan() {
+    readNdef()
+    setScanMode(true)
+  }
+
   function HomeDisplay() {
     return (
       <View style={styles.container}>
@@ -75,7 +110,7 @@ export default function App() {
         
         <View style={{alignItems: 'center', paddingTop: 500}}>
         <TouchableOpacity
-        onPress={() => setScanMode(true)}
+        onPress={() => changeScan()}
         style={(styles.roundButton1)}>
         <Text style={{color: 'white', fontSize: 20}}>Scan</Text>
       </TouchableOpacity>
@@ -130,8 +165,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
+    borderColor: 1,
     
   }
 });
