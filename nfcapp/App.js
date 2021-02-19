@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
-import { SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Button, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView, ActivityIndicator, StyleSheet, ScrollView, View, Text, StatusBar, Button, TouchableOpacity, Image } from 'react-native';
+
+import {
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator,
+  WaveIndicator,
+} from 'react-native-indicators';
 
 import NfcManager, {NfcEvents} from 'react-native-nfc-manager';
 
@@ -21,7 +32,9 @@ export default function App() {
       NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {
         tagFound = tag;
         resolve(tagFound);
+        makePost()
         setScanMode(false)
+        setScanned(true)
         NfcManager.setAlertMessageIOS('NDEF tag found');
         NfcManager.unregisterTagEvent().catch(() => 0);
       });
@@ -58,32 +71,19 @@ export default function App() {
         </View>
         <View style={styles.scanBox}>
           <View style={{paddingTop: 20}}>
-          <Text style={{fontSize: 20, textAlign: 'center'}}>Ready to scan</Text>
-          <View style={{alignItems: 'center', paddingTop: 50}}>
-          <Image
-          style={{width: 80, height: 100}}
-          source={require('./images/nfc.png')}
-          />
-          </View>
-          <View style={{paddingTop: 50}}>
+          <Text style={{fontSize: 20, textAlign: 'center', fontWeight: 'bold'}}>Scanning</Text>
+          <BarIndicator size={50} count={5} color={'#3888EA'}></BarIndicator>
           <Text style={{fontSize: 14, textAlign: 'center'}}>Hold your phone near the NFC tag</Text>
           <Text style={{fontSize: 14, textAlign: 'center'}}>to unlock ur phone</Text>
-          <View style={{paddingTop: 20}}>
-          <Button
-          title="Send"
-          color="darkgrey"
-          onPress={() => makePost()}
-          />
+          <View style={{paddingBot: 20}}>
           <Button
           title="Cancel"
-          color="darkgrey"
+          color="#3888EA"
           onPress={() => setScanMode(false)}
           />
           </View>
-          </View>
-          </View>
-          
         </View>
+      </View>
       </View>
     )
   }
@@ -91,7 +91,22 @@ export default function App() {
   function WaitingDisplay() {
     return (
       <View style={styles.container}>
-        <Text>Scan complete</Text>
+        <View style={{paddingTop: 100}}>
+        <Text style={{fontWeight: 'bold', fontSize: 26, textAlign: 'center'}}>Scan complete!</Text>
+        </View>
+        <View style={{paddingTop: 150, alignContent: 'center', alignItems: 'center'}}>
+        <Image
+          style={{width: 80, height: 100}}
+          source={require('./images/nfc.png')}
+        />
+        </View>
+        <View style={{alignItems: 'center', paddingTop: 200}}>
+        <TouchableOpacity
+        onPress={() => setScanned(false)}
+        style={(styles.roundButton1)}>
+        <Text style={{color: 'white', fontSize: 20}}>Go back</Text>
+      </TouchableOpacity>
+      </View>
       </View>
     )
   }
@@ -107,8 +122,13 @@ export default function App() {
         <View style={{paddingTop: 100}}>
         <Text style={{fontWeight: 'bold', fontSize: 26, textAlign: 'center'}}>Welcome to Scanner App!</Text>
         </View>
-        
-        <View style={{alignItems: 'center', paddingTop: 500}}>
+        <View style={{paddingTop: 150, alignContent: 'center', alignItems: 'center'}}>
+        <Image
+          style={{width: 80, height: 100}}
+          source={require('./images/nfc.png')}
+        />
+        </View>
+        <View style={{alignItems: 'center', paddingTop: 200}}>
         <TouchableOpacity
         onPress={() => changeScan()}
         style={(styles.roundButton1)}>
@@ -120,14 +140,14 @@ export default function App() {
   }
 
   function Display() {
+    if (scanned == true) {
+      return WaitingDisplay()
+    }
+
     if (scanMode == false) {
-      return (
-        HomeDisplay()
-      )
+      return HomeDisplay() 
     } else {
-      if (scanned == false) {
-        return ScannedDisplay()
-      }
+      return ScannedDisplay()  
     }
     
   }
@@ -167,6 +187,10 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     borderColor: 1,
-    
-  }
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
 });
