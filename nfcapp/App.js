@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
-import { SafeAreaView, ActivityIndicator, StyleSheet, ScrollView, View, Text, StatusBar, Button, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text,  Button, TouchableOpacity, Image } from 'react-native';
 
-import {
-  BarIndicator,
-  DotIndicator,
-  MaterialIndicator,
-  PacmanIndicator,
-  PulseIndicator,
-  SkypeIndicator,
-  UIActivityIndicator,
-  WaveIndicator,
-} from 'react-native-indicators';
+import {BarIndicator} from 'react-native-indicators';
 
 import NfcManager, {NfcEvents} from 'react-native-nfc-manager';
 
-export default function App() {
+import Modal from 'react-native-modal';
 
+export default function App() {
+  const [modalOpen, setModalOpen] = useState(false);
   const [ scanned, setScanned ] = useState(false);
   const [ scanMode, setScanMode] = useState(false);
 
@@ -35,6 +28,7 @@ export default function App() {
         makePost()
         setScanMode(false)
         setScanned(true)
+        setModalOpen(false)
         NfcManager.setAlertMessageIOS('NDEF tag found');
         NfcManager.unregisterTagEvent().catch(() => 0);
       });
@@ -58,7 +52,7 @@ export default function App() {
     'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      text: 'hello'
+      imei: 'AA-BBBBBB-CCCCCC-D'
     })
   }).then((response) => console.log(response))
   }
@@ -75,7 +69,7 @@ export default function App() {
           <BarIndicator size={50} count={5} color={'#3888EA'}></BarIndicator>
           <View style={{paddingBottom: 30}}>
           <Text style={{fontSize: 14, textAlign: 'center'}}>Hold your phone near the NFC tag</Text>
-          <Text style={{fontSize: 14, textAlign: 'center'}}>to unlock ur phone</Text>
+          <Text style={{fontSize: 14, textAlign: 'center'}}>to login</Text>
           </View>
           <View style={{paddingBottom: 20}}>
           <Button
@@ -93,6 +87,27 @@ export default function App() {
   function WaitingDisplay() {
     return (
       <View style={styles.container}>
+        <Modal
+        isVisible={modalOpen}
+        style={styles.view}>
+        <View style={styles.scanBox}>
+          <View style={{paddingTop: 20}}>
+          <Text style={{fontSize: 20, textAlign: 'center', fontWeight: 'bold'}}>Scanning</Text>
+          <BarIndicator size={50} count={5} color={'#3888EA'}></BarIndicator>
+          <View style={{paddingBottom: 30}}>
+          <Text style={{fontSize: 14, textAlign: 'center'}}>Hold your phone near the NFC tag</Text>
+          <Text style={{fontSize: 14, textAlign: 'center'}}>to login</Text>
+          </View>
+          <View style={{paddingBottom: 20}}>
+          <Button
+          title="Cancel"
+          color="#3888EA"
+          onPress={() => setModalOpen(false)}
+          />
+          </View>
+        </View>
+        </View>
+        </Modal>
         <View style={{paddingTop: 100}}>
         <Text style={{fontWeight: 'bold', fontSize: 26, textAlign: 'center'}}>Scan complete!</Text>
         </View>
@@ -115,12 +130,34 @@ export default function App() {
 
   function changeScan() {
     readNdef()
-    setScanMode(true)
+    setModalOpen(true)
+
   }
 
   function HomeDisplay() {
     return (
       <View style={styles.container}>
+        <Modal
+        isVisible={modalOpen}
+        style={styles.view}>
+        <View style={styles.scanBox}>
+          <View style={{paddingTop: 20}}>
+          <Text style={{fontSize: 20, textAlign: 'center', fontWeight: 'bold'}}>Scanning</Text>
+          <BarIndicator size={50} count={5} color={'#3888EA'}></BarIndicator>
+          <View style={{paddingBottom: 30}}>
+          <Text style={{fontSize: 14, textAlign: 'center'}}>Hold your phone near the NFC tag</Text>
+          <Text style={{fontSize: 14, textAlign: 'center'}}>to login</Text>
+          </View>
+          <View style={{paddingBottom: 20}}>
+          <Button
+          title="Cancel"
+          color="#3888EA"
+          onPress={() => setModalOpen(false)}
+          />
+          </View>
+        </View>
+        </View>
+        </Modal>
         <View style={{paddingTop: 100}}>
         <Text style={{fontWeight: 'bold', fontSize: 26, textAlign: 'center'}}>Welcome to Scanner App!</Text>
         </View>
@@ -177,6 +214,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#3888EA',
   },
   scanBox: {
+    backgroundColor: 'white',
     flex: 5, 
     alignContent: 'center', 
     alignItems: 'center', 
@@ -190,9 +228,8 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderColor: 1,
   },
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+  view: {
+    justifyContent: 'flex-end',
+    margin: 0,
   },
 });

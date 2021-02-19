@@ -12,7 +12,9 @@
   "dependencies": {
     "react": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-imei": "^0.2.0",
     "react-native-indicators": "^0.17.0",
+    "react-native-modal": "^11.6.1",
     "react-native-nfc-manager": "^2.2.1"
   },
   "devDependencies": {
