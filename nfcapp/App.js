@@ -141,14 +141,14 @@ export default function App() {
         isVisible={modalOpen}
         style={styles.view}>
         <View style={styles.scanBox}>
-          <View style={{paddingTop: 20}}>
-          <Text style={{fontSize: 20, textAlign: 'center', fontWeight: 'bold'}}>Scanning</Text>
+          <View style={{paddingTop: 150}}>
+          <Text style={{fontSize: 25, textAlign: 'center', fontWeight: 'bold'}}>Scanning</Text>
           <BarIndicator size={50} count={5} color={'#3888EA'}></BarIndicator>
           <View style={{paddingBottom: 30}}>
-          <Text style={{fontSize: 14, textAlign: 'center'}}>Hold your phone near the NFC tag</Text>
-          <Text style={{fontSize: 14, textAlign: 'center'}}>to login</Text>
+          <Text style={{fontSize: 20, textAlign: 'center'}}>Hold your phone near the NFC tag</Text>
+          <Text style={{fontSize: 20, textAlign: 'center'}}>to login</Text>
           </View>
-          <View style={{paddingBottom: 20}}>
+          <View style={{paddingBottom: 150}}>
           <Button
           title="Cancel"
           color="#3888EA"
