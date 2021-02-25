@@ -121,7 +121,7 @@ export default function App() {
         <TouchableOpacity
         onPress={() => setScanned(false)}
         style={(styles.roundButton1)}>
-        <Text style={{color: 'white', fontSize: 20}}>Go back</Text>
+        <Text style={{color: 'white', fontSize: 20}}>Back</Text>
       </TouchableOpacity>
       </View>
       </View>
